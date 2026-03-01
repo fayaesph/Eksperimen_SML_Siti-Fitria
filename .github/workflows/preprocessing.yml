@@ -1,0 +1,51 @@
+# ===========================
+# GitHub Actions Workflow
+# Otomatisasi preprocessing dataset Diabetes
+# Trigger: setiap push ke branch main
+# ===========================
+
+name: Preprocessing Automation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # bisa dijalankan manual dari GitHub
+
+jobs:
+  preprocessing:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Run actions/checkout@v3
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Python 3.12.7
+      - name: Set up Python 3.12.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.7'
+
+      # Step 3: Cek environment
+      - name: Check Env
+        run: |
+          python --version
+          pip --version
+
+      # Step 4: Install dependencies
+      - name: Install dependencies
+        run: |
+          pip install pandas numpy scikit-learn imbalanced-learn
+
+      # Step 5: Jalankan script preprocessing otomatis
+      - name: Run preprocessing script
+        run: |
+          python preprocessing/automate_Siti-Fitria.py
+
+      # Step 6: Upload hasil preprocessing ke GitHub
+      - name: Upload hasil preprocessing
+        uses: actions/upload-artifact@v4
+        with:
+          name: diabetes_preprocessing
+          path: preprocessing/diabetes_preprocessing/
